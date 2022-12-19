@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0" xmlns:isee="http://iseesystems.com/XMILE" xmlns:simlin="https://simlin.com/XMILE/v1.0">
+    <header>
+        <name>population</name>
+        <vendor>Simlin</vendor>
+        <product version="0.1.0" lang="en">Simlin</product>
+    </header>
+    <sim_specs method="euler" time_units="year">
+        <start>1</start>
+        <stop>25</stop>
+        <dt reciprocal="true">2</dt>
+    </sim_specs>
+    <model_units>
+        <unit name="Years">
+            <alias>yr</alias>
+            <alias>year</alias>
+        </unit>
+    </model_units>
+    <model>
+        <variables>
+            <stock name="population">
+                <eqn>100</eqn>
+                <units>individuals</units>
+                <inflow>births</inflow>
+                <outflow>deaths</outflow>
+                <non_negative></non_negative>
+            </stock>
+            <flow name="births">
+                <eqn>population*birth_rate</eqn>
+                <units>individuals/year</units>
+                <non_negative></non_negative>
+            </flow>
+            <flow name="deaths">
+                <eqn>population/average_lifespan</eqn>
+                <units>individuals/year</units>
+                <non_negative></non_negative>
+            </flow>
+            <aux name="birth_rate">
+                <eqn>0.1</eqn>
+                <units>1/year</units>
+            </aux>
+            <aux name="average_lifespan">
+                <eqn>80</eqn>
+                <units>years</units>
+            </aux>
+        </variables>
+        <views>
+            <view isee:show_pages="false" page_width="800" page_height="600" view_type="stock_flow">
+                <stock name="population" x="514" y="102" label_side="bottom"></stock>
+                <flow name="births" x="439.25" y="102" label_side="bottom">
+                    <pts>
+                        <pt x="387" y="102"></pt>
+                        <pt x="491.5" y="102"></pt>
+                    </pts>
+                </flow>
+                <flow name="deaths" x="577.75" y="102" label_side="bottom">
+                    <pts>
+                        <pt x="536.5" y="102"></pt>
+                        <pt x="643" y="102"></pt>
+                    </pts>
+                </flow>
+                <connector angle="35.311199999999985">
+                    <from>population</from>
+                    <to>deaths</to>
+                </connector>
+                <connector angle="140.194">
+                    <from>population</from>
+                    <to>births</to>
+                </connector>
+                <aux name="birth rate" x="378" y="146" label_side="bottom"></aux>
+                <aux name="average lifespan" x="641" y="146" label_side="bottom"></aux>
+                <connector angle="35.692200000000014">
+                    <from>birth rate</from>
+                    <to>births</to>
+                </connector>
+                <connector angle="145.176">
+                    <from>average lifespan</from>
+                    <to>deaths</to>
+                </connector>
+            </view>
+        </views>
+    </model>
+</xmile>

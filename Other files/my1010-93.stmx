@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0" xmlns:isee="http://iseesystems.com/XMILE" xmlns:simlin="https://simlin.com/XMILE/v1.0">
+    <header>
+        <name>my1010</name>
+        <vendor>Simlin</vendor>
+        <product version="0.1.0" lang="en">Simlin</product>
+    </header>
+    <sim_specs method="euler" time_units="days">
+        <start>0</start>
+        <stop>100</stop>
+        <dt>1</dt>
+    </sim_specs>
+    <model>
+        <variables>
+            <stock name="susceptible">
+                <eqn>Susceptible_i-(Susceptible_i*Vaccinated_proportion/100)</eqn>
+                <doc>Initial number of susceptible individuals</doc>
+                <outflow>infection</outflow>
+            </stock>
+            <stock name="infected">
+                <eqn>1</eqn>
+                <doc>Initial number of infected individuals.</doc>
+                <inflow>infection</inflow>
+                <outflow>recovery</outflow>
+            </stock>
+            <stock name="recovered">
+                <eqn>Susceptible_i*Vaccinated_proportion/100</eqn>
+                <doc>Initial number of recovered individuals</doc>
+                <inflow>recovery</inflow>
+            </stock>
+            <aux name="illness_duration">
+                <eqn>1.44</eqn>
+                <doc>Average duration an infected individual is infectious (days)</doc>
+                <units>days</units>
+            </aux>
+            <aux name="vaccinated_proportion">
+                <eqn>0</eqn>
+                <doc>Proportion of the population that are initially vaccinated (%)</doc>
+            </aux>
+            <aux name="r0">
+                <eqn>3.12</eqn>
+                <doc>Basic reproduction number</doc>
+            </aux>
+            <aux name="susceptible_i">
+                <eqn>763</eqn>
+                <doc>Initial number of susceptible individuals (N)</doc>
+                <units>individuals</units>
+            </aux>
+            <aux name="s">
+                <eqn>100*Susceptible/N</eqn>
+            </aux>
+            <aux name="i">
+                <eqn>100*Infected/N</eqn>
+            </aux>
+            <aux name="r">
+                <eqn>100*Recovered/N</eqn>
+            </aux>
+            <aux name="n">
+                <eqn>Susceptible+Infected+Recovered</eqn>
+            </aux>
+            <aux name="transmission_rate">
+                <eqn>R0/(Illness_Duration*N)</eqn>
+            </aux>
+            <flow name="infection">
+                <eqn>Transmission_Rate*Susceptible*Infected</eqn>
+            </flow>
+            <aux name="recovery_rate">
+                <eqn>1/Illness_Duration</eqn>
+            </aux>
+            <flow name="recovery">
+                <eqn>Recovery_Rate*Infected</eqn>
+            </flow>
+        </variables>
+        <views>
+            <view isee:show_pages="false" page_width="800" page_height="600" view_type="stock_flow">
+                <stock name="Susceptible" x="237.33334350585938" y="425.68964271845783" label_side="bottom"></stock>
+                <stock name="Infected" x="404" y="427.0229862243172" label_side="bottom"></stock>
+                <stock name="Recovered" x="577.3333740234375" y="428.35629921259846" label_side="bottom"></stock>
+                <aux name="Illness_Duration" x="338.66668701171875" y="665.689673236036" label_side="right"></aux>
+                <aux name="Vaccinated_proportion" x="518.6666870117188" y="663.0230472594735" label_side="right"></aux>
+                <aux name="R0" x="718.6666870117188" y="660.3562992125985" label_side="right"></aux>
+                <aux name="Susceptible_i" x="125.3333740234375" y="671.0229862243173" label_side="right"></aux>
+                <aux name="s" x="524" y="119.02297096552815" label_side="right"></aux>
+                <aux name="i" x="565.3333740234375" y="116.35629921259846" label_side="right"></aux>
+                <aux name="r" x="602.6666870117188" y="115.02297096552815" label_side="right"></aux>
+                <aux name="N" x="644" y="115.02297096552815" label_side="right"></aux>
+                <aux name="Transmission_Rate" x="281.3333435058594" y="317.68964271845783" label_side="right"></aux>
+                <flow name="Infection" x="320.6666717529297" y="425.68964271845783" label_side="bottom">
+                    <pts>
+                        <pt x="259.8333435058594" y="425.68964271845783"></pt>
+                        <pt x="381.5" y="425.68964271845783"></pt>
+                    </pts>
+                </flow>
+                <connector angle="-21.16610610821482">
+                    <from>Transmission_Rate</from>
+                    <to>Infection</to>
+                </connector>
+                <aux name="Recovery_Rate" x="504" y="307.0229862243172" label_side="right"></aux>
+                <flow name="Recovery" x="490.66668701171875" y="427.0229862243172" label_side="bottom">
+                    <pts>
+                        <pt x="404" y="427.0229862243172"></pt>
+                        <pt x="554.8333740234375" y="427.0229862243172"></pt>
+                    </pts>
+                </flow>
+                <connector angle="-64.99155449439479">
+                    <from>Recovery_Rate</from>
+                    <to>Recovery</to>
+                </connector>
+            </view>
+        </views>
+    </model>
+</xmile>

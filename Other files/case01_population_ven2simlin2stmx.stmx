@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0" xmlns:isee="http://iseesystems.com/XMILE" xmlns:simlin="https://simlin.com/XMILE/v1.0">
+    <header>
+        <vendor>Simlin</vendor>
+        <product version="0.1.0" lang="en">Simlin</product>
+    </header>
+    <sim_specs method="euler" time_units="Month">
+        <start>0</start>
+        <stop>100</stop>
+        <dt>1</dt>
+    </sim_specs>
+    <model>
+        <variables>
+            <stock name="population">
+                <eqn>1000</eqn>
+                <inflow>births</inflow>
+                <outflow>deaths</outflow>
+            </stock>
+            <aux name="birth_rate">
+                <eqn>0.04</eqn>
+            </aux>
+            <aux name="average_lifetime">
+                <eqn>50</eqn>
+            </aux>
+            <flow name="births">
+                <eqn>Population*birth_rate</eqn>
+                <units>people/Month</units>
+            </flow>
+            <flow name="deaths">
+                <eqn>Population/average_lifetime</eqn>
+            </flow>
+        </variables>
+        <views>
+            <view isee:show_pages="false" page_width="800" page_height="600" view_type="stock_flow">
+                <stock name="Population" x="560" y="338" label_side="top"></stock>
+                <flow name="Births" x="453" y="340" label_side="bottom">
+                    <pts>
+                        <pt x="372" y="340"></pt>
+                        <pt x="537.5" y="340"></pt>
+                    </pts>
+                </flow>
+                <flow name="Deaths" x="696" y="338" label_side="bottom">
+                    <pts>
+                        <pt x="582.5" y="338"></pt>
+                        <pt x="795" y="338"></pt>
+                    </pts>
+                </flow>
+                <aux name="average_lifetime" x="794" y="459" label_side="bottom"></aux>
+                <aux name="birth_rate" x="397" y="465" label_side="bottom"></aux>
+                <connector angle="157.79356999868986">
+                    <from>birth_rate</from>
+                    <to>Births</to>
+                </connector>
+                <connector angle="134.07685738558604">
+                    <from>average_lifetime</from>
+                    <to>Deaths</to>
+                </connector>
+                <connector angle="-108.79027676539266">
+                    <from>Population</from>
+                    <to>Deaths</to>
+                </connector>
+                <connector angle="134.40724790965527">
+                    <from>Population</from>
+                    <to>Births</to>
+                </connector>
+            </view>
+        </views>
+    </model>
+</xmile>

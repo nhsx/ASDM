@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+	<header>
+		<product version="1.0" lang="en">Vensim</product>
+		<vendor>Ventana Systems, Inc.</vendor>
+		<created>
+		</created>
+		<modified>
+		</modified>
+		<name>
+		</name>
+		<caption>
+		</caption>
+	</header>
+	<sim_specs method="RK4" time_units="year">
+		<start> 1900</start>
+		<stop> 1950</stop>
+		<dt> 1</dt>
+	</sim_specs>
+	<model>
+		<variables>
+			<stock name="Deer_Population">
+				<units>Deer</units>
+				<doc>Initial amount of deer is 5,000 and remains constant</doc>
+					<eqn>
+					5000
+					</eqn>
+					<inflow>
+					Deer Net Growth Rate
+					</inflow>
+					<outflow>
+					Deer Predation Rate
+					</outflow>
+			</stock>
+			<stock name="Food">
+				<units>ton</units>
+				<doc>MODIFIED - Now Food depends from the Food Consumption Rate and from the Food Generation Rate.</doc>
+					<eqn>
+					100000
+					</eqn>
+					<inflow>
+					Food Generation Rate
+					</inflow>
+					<outflow>
+					Food Consumption Rate
+					</outflow>
+			</stock>
+			<aux name="Deer_Density">
+				<units>Deer/acre</units>
+				<doc>This is the amount of acres per deer</doc>
+					<eqn>
+	Deer_Population/Area					</eqn>
+			</aux>
+			<aux name="Deer_Killed_per_Predator">
+				<units>Deer/(year*lion)</units>
+				<doc>When density is equal to 0, the deer killed are 0. Point (0.0). When the Deer Density is equal to the Initial Deer Density each predator hunts 2 deer each year. Point (1,2).</doc>
+					<eqn> WITH LOOKUP (
+	Deer_Density/Initial_Deer_Density,
+		([(0,0)-(6,8)],(0,0),(1,2),(2,4),(4,6),(20,6) ))					</eqn>
+			</aux>
+			<aux name="Deer_Net_Growth_Rate">
+				<units>Deer/year</units>
+				<doc></doc>
+					<eqn>
+	Deer_Population*Growth_Rate_Factor					</eqn>
+			</aux>
+			<aux name="Deer_Predation_Rate">
+				<units>Deer/year</units>
+				<doc></doc>
+					<eqn>
+	Deer_Killed_per_Predator*Predator_Population					</eqn>
+			</aux>
+			<aux name="Food_Consumption_per_Deer">
+				<units>ton/(Deer*year)</units>
+				<doc>When Food = 0  (Food/Food Capacity=0),  we assume that  Food Consumption per Deer = 0, point (0,0), if there is no food, deer can’t eat anything.
+When Food = Food Capacity  (Food/Food Capacity=1),  we assume that  Food Consumption per Deer = 1 Ton/deer/Year , point (1,1)  This means that if we have 5,000 deer the Food Consumption Rate will be 5,000 Tons
+In the two central points of the table we assume that when Food/Food Capacity=0.4, deer consumption is equal to 0.8 Ton/deer/Year, and when the value is 0.2 the consumption is 0.4</doc>
+					<eqn> WITH LOOKUP (
+	Food/Food_Capacity,
+		([(0,0)-(1,1)],(0,0),(0.2,0.4),(0.4,0.8),(1,1) ))					</eqn>
+			</aux>
+			<aux name="Food_Consumption_Rate">
+				<units>ton/year</units>
+				<doc></doc>
+					<eqn>
+	Deer_Population*Food_Consumption_per_Deer					</eqn>
+			</aux>
+			<aux name="Food_Generation_Rate">
+				<units>ton/year</units>
+				<doc></doc>
+					<eqn>
+	(Food_Capacity-Food)/Food_Regeneration_Time					</eqn>
+			</aux>
+			<aux name="Food_per_Deer">
+				<units>ton/Deer</units>
+				<doc></doc>
+					<eqn>
+	Food/Deer_Population					</eqn>
+			</aux>
+			<aux name="Food_Regeneration_Time">
+				<units>year</units>
+				<doc>Food Regeneration Time will depends from the Food Capacity and present Food. We will assume that the ratio (Food/Food Capacity) will be a good way to obtain the Food Regeneration Time, using Table.  When Food = Food Capacity we will assume that Food Regeneration time will be 1 year. A lower ratio will produce an higher Food Regeneration Time.</doc>
+					<eqn> WITH LOOKUP (
+	Food/Food_Capacity,
+		([(0,0)-(1,40)],(0,40),(0.5,1.5),(1,1) ))					</eqn>
+			</aux>
+			<aux name="Growth_Rate_Factor">
+				<units>1/year</units>
+				<doc>MODIFIED</doc>
+					<eqn> WITH LOOKUP (
+	Food_per_Deer/Initial_Food_per_Deer,
+		([(0,-0.8)-(1,0.4)],(0,-0.6),(0.05,0),(0.1,0.2),(1,0.2) ))					</eqn>
+			</aux>
+			<aux name="Predator_Population">
+				<units>lion</units>
+				<doc></doc>
+					<eqn>
+	500-STEP(500,1910)					</eqn>
+			</aux>
+			<aux name="Area">
+				<units>acre</units>
+				<doc></doc>
+					<eqn>
+	1e+06					</eqn>
+			</aux>
+			<aux name="Food_Capacity">
+				<units>ton</units>
+				<doc></doc>
+					<eqn>
+	100000					</eqn>
+			</aux>
+			<aux name="Initial_Deer_Density">
+				<units>Deer/acre</units>
+				<doc>5,000 deer / 1,000,000 acres</doc>
+					<eqn>
+	0.005					</eqn>
+			</aux>
+			<aux name="Initial_Food_per_Deer">
+				<units>ton/Deer</units>
+				<doc></doc>
+					<eqn>
+	20					</eqn>
+			</aux>
+		</variables>
+	</model>
+</xmile>
